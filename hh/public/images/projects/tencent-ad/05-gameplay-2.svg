@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#f5f0e8"/>
+  <rect x="1.5" y="1.5" width="797" height="497" fill="none" stroke="#ddd0bf" stroke-width="1.5"/>
+  <line x1="0" y1="250" x2="800" y2="250" stroke="#e6dbcc" stroke-width="1"/>
+  <line x1="400" y1="0" x2="400" y2="500" stroke="#e6dbcc" stroke-width="1"/>
+  <text x="400" y="226" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" letter-spacing="4" fill="#8a7a66">GAMEPLAY 2</text>
+  <text x="400" y="266" text-anchor="middle" font-family="Consolas, monospace" font-size="15" fill="#a89a86">/images/projects/tencent-ad/05-gameplay-2</text>
+  <text x="400" y="298" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#b8a88f">上传: 点选玩法</text>
+</svg>
