@@ -35,18 +35,18 @@ const items: Item[] = [
 
 export function Experience() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  return <section id="experience" className="scroll-mt-20 bg-[#f4efe9] px-5 py-[clamp(2.25rem,5vh,4.25rem)] md:px-8">
-    <div className="mx-auto max-w-6xl">
+  return <section id="experience" className="home-section h-dvh snap-start snap-always overflow-hidden bg-[#f4efe9] px-5 pb-[clamp(1rem,2.5vh,2rem)] pt-[calc(4rem+clamp(1rem,2.5vh,2rem))] md:px-8">
+    <div className="mx-auto flex h-full max-w-6xl flex-col">
       <header className="grid items-end gap-3 md:grid-cols-[.72fr_1.28fr]">
         <div><p className="text-[11px] font-medium tracking-[.22em] text-[#9b6c59]">EXPERIENCE</p><h2 className="mt-1 text-[clamp(1.85rem,3vw,2.7rem)] font-medium leading-tight tracking-[-.035em]">我的实习经历</h2></div>
         <p className="max-w-xl text-sm leading-6 text-[#746b64] md:justify-self-end md:text-base">从 AI 产品、创业实践到算法研究，<br className="hidden sm:block" />在不同场景里理解「产品如何真正解决问题」。</p>
       </header>
 
-      <div className="mt-[clamp(1.25rem,3vh,2rem)] space-y-3">{items.map((item, index) => {
+      <div className="mt-[clamp(.75rem,2vh,1.5rem)] min-h-0 flex-1 space-y-2.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-width:thin]">{items.map((item, index) => {
         const open = openIndex === index
         const panelId = `experience-panel-${index}`
         return <article key={item.org} className={cn('group overflow-hidden rounded-[20px] border bg-[#fffdf9] transition-[border-color,transform,background-color] duration-300 hover:-translate-y-0.5 hover:border-[#cdbeb1] hover:bg-white', open ? 'border-[#c9b2a5]' : 'border-[#e4dbd2]')}>
-          <button type="button" aria-expanded={open} aria-controls={panelId} onClick={() => setOpenIndex(open ? null : index)} className="grid min-h-[88px] w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 px-4 text-left md:grid-cols-[3.25rem_1fr_auto_2.5rem] md:gap-5 md:px-6">
+          <button type="button" aria-expanded={open} aria-controls={panelId} onClick={() => setOpenIndex(open ? null : index)} className="grid min-h-[78px] w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 px-4 text-left md:grid-cols-[3.25rem_1fr_auto_2.5rem] md:gap-5 md:px-6">
             <span className="self-start pt-6 text-xs tracking-[.16em] text-[#a69b92]">{String(index + 1).padStart(2, '0')}</span>
             <span className="min-w-0 transition-transform duration-300 group-hover:translate-x-1"><strong className="block truncate text-[clamp(1rem,1.55vw,1.3rem)] font-medium text-[#403933]">{item.org}</strong><span className="mt-1 block text-sm text-[#756b63]">{item.role}{item.meta && <span className="text-[#a05f4e]"> · {item.meta}</span>}</span></span>
             <time className="self-start whitespace-nowrap pt-6 text-xs text-[#8f847b] md:self-auto md:pt-0 md:text-sm">{item.period}</time>

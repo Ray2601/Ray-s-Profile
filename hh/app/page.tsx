@@ -6,10 +6,11 @@ import { Experience } from '@/components/portfolio/experience'
 import { Projects } from '@/components/portfolio/projects'
 import { Skills } from '@/components/portfolio/skills'
 import { Contact } from '@/components/portfolio/contact'
+import { HomeScroll } from '@/components/portfolio/home-scroll'
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <HomeScroll>
       <Navbar />
       <Hero />
       <About />
@@ -18,6 +19,6 @@ export default function Page() {
       <Projects />
       <Skills />
       <Contact />
-    </main>
+    </HomeScroll>
   )
 }

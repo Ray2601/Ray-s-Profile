@@ -35,8 +35,8 @@ export function Projects() {
     return order.indexOf(a.id) - order.indexOf(b.id)
   })
   return (
-    <section id="projects" className="relative scroll-mt-24 py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section id="projects" className="home-section relative h-dvh snap-start snap-always overflow-hidden px-5 pb-[clamp(1rem,2.5vh,2rem)] pt-[calc(4rem+clamp(1rem,2.5vh,2rem))] md:px-8">
+      <div className="mx-auto grid h-full max-w-6xl grid-rows-[auto_1fr]">
         <SectionHeading
           eyebrow="MY LITTLE LAB"
           title="一些我真的做出来的东西 ⚡"
@@ -44,14 +44,14 @@ export function Projects() {
           nowrap
         />
 
-        <div className="mt-14 grid gap-8 md:gap-10">
+        <div className="mt-[clamp(.75rem,2vh,1.5rem)] grid min-h-0 grid-cols-1 gap-3 md:grid-cols-2 md:grid-rows-2">
           {orderedProjects.map((p, i) => {
             const reversed = i % 2 === 1
             return (
             <article
               key={p.id}
               className={cn(
-                'group relative flex flex-col overflow-hidden rounded-[28px] border border-white/80 bg-white shadow-[0_12px_40px_rgba(85,67,50,.08)] transition-all hover:-translate-y-1.5 hover:shadow-[0_18px_50px_rgba(85,67,50,.12)] md:flex-row',
+                'group relative flex min-h-0 flex-row overflow-hidden rounded-[22px] border border-white/80 bg-white shadow-[0_8px_28px_rgba(85,67,50,.07)] transition-all hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(85,67,50,.11)]',
                 i % 2 === 0 ? 'md:rotate-[.25deg]' : 'md:-rotate-[.25deg]',
               )}
             >
@@ -63,8 +63,8 @@ export function Projects() {
               <Link href={p.href || '#'} onClick={e => { if (p.video && !(e.target as HTMLElement).closest('[data-preview-interactive]')) { e.preventDefault(); setVideo(p.video) } }} className="contents" aria-label={`查看 ${p.title} 项目`}>
               <div
                 className={cn(
-                  'relative aspect-[16/10] w-full overflow-hidden bg-[#f7eee5] md:aspect-auto md:w-1/2',
-                  reversed && 'md:order-2',
+                  'relative h-full w-[44%] shrink-0 overflow-hidden bg-[#f7eee5]',
+                  reversed && 'order-2',
                 )}
               >
                 {p.id === 'xiniuniao' ? <Interactive3DPreview /> : <Image
@@ -78,7 +78,7 @@ export function Projects() {
                 />}
               </div>
 
-              <div className={cn('relative flex flex-1 flex-col p-7 md:p-10', reversed && 'md:order-1')}>
+              <div className={cn('relative flex min-w-0 flex-1 flex-col p-[clamp(1rem,2vh,1.5rem)]', reversed && 'order-1')}>
                 {p.id !== '25-degree' && <span className="absolute right-7 top-5 text-xl text-[#efb94c]" aria-hidden>✦</span>}
                 <span
                   className={cn(
@@ -88,13 +88,13 @@ export function Projects() {
                 >
                   {p.subtitle}
                 </span>
-                <h3 className="mt-3 flex items-center gap-1.5 text-2xl font-medium tracking-[-.025em] md:text-3xl">
+                <h3 className="mt-1.5 flex items-center gap-1.5 text-[clamp(1.15rem,1.7vw,1.5rem)] font-medium tracking-[-.025em]">
                   {p.title}
                   <ArrowUpRight className="size-5 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </h3>
-                <p className="mt-4 text-[15px] font-normal leading-7 text-muted-foreground">{p.description}</p>
+                <p className="mt-2 line-clamp-2 text-[13px] font-normal leading-5 text-muted-foreground">{p.description}</p>
 
-                <div className="mt-5 flex flex-wrap gap-2">
+                <div className="mt-2 hidden flex-wrap gap-1.5 xl:flex">
                   {p.tags.map((t) => (
                     <span
                       key={t}
@@ -105,10 +105,10 @@ export function Projects() {
                   ))}
                 </div>
 
-                <div className="mt-auto flex gap-8 pt-6">
+                <div className="mt-auto flex gap-5 pt-2">
                   {p.metrics.map((m) => (
                     <div key={m.label}>
-                      <p className="text-2xl font-medium text-[#c86f60]">{m.value}</p>
+                      <p className="text-lg font-medium text-[#c86f60]">{m.value}</p>
                       <p className="mt-0.5 text-xs text-muted-foreground">{m.label}</p>
                     </div>
                   ))}

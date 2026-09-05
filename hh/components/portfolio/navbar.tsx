@@ -10,10 +10,11 @@ export function Navbar() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
+    const scrollRoot = document.querySelector('main')
+    const onScroll = () => setScrolled((scrollRoot?.scrollTop ?? window.scrollY) > 12)
     onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    scrollRoot?.addEventListener('scroll', onScroll, { passive: true })
+    return () => scrollRoot?.removeEventListener('scroll', onScroll)
   }, [])
 
   const go = (id: string) => {

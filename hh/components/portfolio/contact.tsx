@@ -7,9 +7,9 @@ import { profile } from '@/lib/portfolio-data'
 export function Contact() {
   const [wechatOpen, setWechatOpen] = useState(false)
   return (
-    <section id="contact" className="scroll-mt-24 py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <div className="relative overflow-hidden rounded-[28px] border border-white bg-[#f7e1dc] px-6 py-14 text-center shadow-[0_14px_40px_rgba(107,75,64,.08)] md:px-12 md:py-20">
+    <section id="contact" className="home-section h-dvh snap-start snap-always overflow-hidden px-5 pb-[clamp(1rem,3vh,2rem)] pt-[calc(4rem+clamp(1rem,3vh,2rem))] md:px-8">
+      <div className="mx-auto grid h-full max-w-6xl grid-rows-[1fr_auto]">
+        <div className="relative flex min-h-0 flex-col justify-center overflow-hidden rounded-[28px] border border-white bg-[#f7e1dc] px-6 text-center shadow-[0_14px_40px_rgba(107,75,64,.08)] md:px-12">
           <div
             aria-hidden
             className="pointer-events-none absolute -left-20 -top-20 size-72 rounded-full bg-primary/15 blur-3xl"
@@ -49,7 +49,7 @@ export function Contact() {
           </div>
         </div>
 
-        <footer className="mt-12 flex flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
+        <footer className="mt-[clamp(.75rem,2vh,1.5rem)] flex flex-col items-center justify-between gap-2 text-sm text-muted-foreground md:flex-row">
           <p>
             © {new Date().getFullYear()} {profile.name}. 用 Vibe Coding 搭建。
           </p>
