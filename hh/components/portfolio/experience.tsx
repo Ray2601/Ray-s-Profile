@@ -19,7 +19,7 @@ const items: Item[] = [
     { title: 'SOTA 模型评测', body: '以 ADD-S/AUC 统一评测 Amodal3R、HOT3D 与 TRELLIS，交付 6D 位姿和 GLB。' },
     { title: '关键发现', body: '验证手物重叠场景存在系统性泛化缺陷，支撑后续论文方向。', metric: 'ADD-S/AUC 0.85+ → 0.52' },
   ]},
-  { org: '北京多多智能制造科技有限公司', role: '产品经理 & 运营', meta: '25° 外卖配送平台', period: '2025.03 — 2025.06', tags: ['0→1', 'GROWTH', 'OPERATIONS'], achievements: [
+  { org: '北京多度智造科技有限公司', role: '产品运营', meta: '25° 外卖配送平台', period: '2025.03 — 2025.06', tags: ['0→1', 'GROWTH', 'OPERATIONS'], achievements: [
     { title: '用户增长', body: '从 0 到 1 搭建并运营校园微信社群，以分层运营稳定转化。', metric: '900+ 人 · DAU 50+ · 转化 25%+' },
     { title: '供给建设', body: '独立拓展餐饮商户，完成菜单数字化、海报设计与平台上线。', metric: '70+ 商户 · 300+ SKU · <0.5 天/店' },
     { title: '履约体系', body: '自建配送团队，建立 3 公里 / 20 分钟标准并引入自动打单。', metric: '准时率 95% · 错误率 <1%' },

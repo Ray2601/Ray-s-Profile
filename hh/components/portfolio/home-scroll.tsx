@@ -6,7 +6,19 @@ export function HomeScroll({ children }: { children: ReactNode }) {
   const root = useRef<HTMLElement>(null)
   const locked = useRef(false)
 
+  const isInsideProjects = () => {
+    const scroller = root.current
+    const projects = scroller?.querySelector<HTMLElement>('#projects')
+    if (!scroller || !projects) return false
+    return scroller.scrollTop >= projects.offsetTop && scroller.scrollTop < projects.offsetTop + projects.offsetHeight
+  }
+
   const onWheel = (event: WheelEvent<HTMLElement>) => {
+    if (isInsideProjects()) {
+      root.current?.style.setProperty('scroll-snap-type', 'none')
+      return
+    }
+    root.current?.style.removeProperty('scroll-snap-type')
     if (locked.current || Math.abs(event.deltaY) < 18) return
     const scroller = root.current
     if (!scroller) return

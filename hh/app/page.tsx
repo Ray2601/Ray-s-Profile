@@ -1,6 +1,5 @@
 import { Navbar } from '@/components/portfolio/navbar'
 import { Hero } from '@/components/portfolio/hero'
-import { About } from '@/components/portfolio/about'
 import { Education } from '@/components/portfolio/education'
 import { Experience } from '@/components/portfolio/experience'
 import { Projects } from '@/components/portfolio/projects'
@@ -13,7 +12,6 @@ export default function Page() {
     <HomeScroll>
       <Navbar />
       <Hero />
-      <About />
       <Education />
       <Experience />
       <Projects />
