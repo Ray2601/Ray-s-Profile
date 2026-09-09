@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { ArrowLeft, ArrowRight, X } from 'lucide-react'
 
@@ -25,23 +26,32 @@ const chapters: Chapter[] = [
 ]
 
 function Projection({ chapter }: { chapter: Chapter }) {
-  return <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 aspect-video w-[min(48vw,720px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-sm border border-white/20 bg-[#171817] shadow-[0_30px_80px_rgba(0,0,0,.45)]">
-    <img src={chapter.image} alt="" className="size-full object-cover opacity-70 mix-blend-screen" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_20%,rgba(0,0,0,.7)_100%)]" />
-    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/85 to-transparent p-6 text-white"><div><p className="text-[10px] tracking-[.25em] opacity-60">NOW PROJECTING</p><p className="mt-1 text-2xl font-medium">{chapter.id} · {chapter.en}</p><p className="mt-1 text-sm text-white/65">{chapter.caption}</p></div><div className="flex gap-1">{[0,1,2,3].map(i => <span key={i} className="h-8 w-1 animate-pulse bg-[#f0c96a]" style={{ animationDelay: `${i * 120}ms` }} />)}</div></div>
-  </div>
+  if (typeof document === 'undefined') return null
+
+  return createPortal(
+    <div className="pointer-events-none fixed left-[50vw] top-[50vh] z-[60] m-0 -translate-x-1/2 -translate-y-1/2">
+      <img data-projection-media src={projectionImages[chapter.id]} alt="" className="block h-auto max-h-[78vh] w-auto max-w-[78vw] object-contain" />
+    </div>,
+    document.body,
+  )
+}
+
+const projectionImages: Record<string, string> = {
+  '01': '/images/projects/tencent-ad/02.gif',
+  '02': '/images/projects/tencent-ad/01.gif',
+  '03': '/images/projects/tencent-ad/03.gif',
+  '04': '/images/projects/tencent-ad/05.gif',
+  '05': '/images/projects/tencent-ad/04.gif',
+  '06': '/images/projects/tencent-ad/06.png',
 }
 
 export function TencentAdShowcase() {
-  const scroller = useRef<HTMLElement>(null)
-  const wall = useRef<HTMLElement>(null)
   const hero = useRef<HTMLElement>(null)
   const wallpaper = useRef<HTMLDivElement>(null)
   const lightTarget = useRef({ x: 0, y: 0 })
   const lightCurrent = useRef({ x: 0, y: 0 })
   const poolCurrent = useRef({ x: 0, y: 0 })
   const lightReady = useRef(false)
-  const wheelLocked = useRef(false)
   const [peeling, setPeeling] = useState(false)
   const [entered, setEntered] = useState(false)
   const [hovered, setHovered] = useState<Chapter | null>(null)
@@ -50,7 +60,6 @@ export function TencentAdShowcase() {
     if (peeling) return
     setPeeling(true)
     setTimeout(() => setEntered(true), 650)
-    setTimeout(() => wall.current?.scrollIntoView({ behavior: 'smooth' }), 1250)
   }
   const moveHeroLight = (event: PointerEvent<HTMLElement>) => {
     const bounds = wallpaper.current?.getBoundingClientRect()
@@ -98,26 +107,24 @@ export function TencentAdShowcase() {
     frame = requestAnimationFrame(animateLight)
     return () => cancelAnimationFrame(frame)
   }, [])
-  const handleWheel = (event: React.WheelEvent<HTMLElement>) => {
-    if (detail || wheelLocked.current || Math.abs(event.deltaY) < 18) return
-    event.preventDefault()
-    const root = scroller.current
-    if (!root) return
-    wheelLocked.current = true
-    const current = Math.round(root.scrollTop / root.clientHeight)
-    const target = Math.max(0, Math.min(2, current + (event.deltaY > 0 ? 1 : -1)))
-    root.scrollTo({ top: target * root.clientHeight, behavior: 'smooth' })
-    window.setTimeout(() => { wheelLocked.current = false }, 850)
-  }
-
-  return <main ref={scroller} onWheel={handleWheel} className="h-dvh min-h-screen snap-y snap-mandatory overflow-x-hidden overflow-y-auto overscroll-none bg-[#d7d3ca] text-[#262521] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+  return <main className="h-dvh overflow-hidden bg-[#d7d3ca] text-[#262521]">
     <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b border-black/10 bg-[#f5efdf]/80 px-6 backdrop-blur-md"><Link href="/#projects" className="flex items-center gap-2 text-sm"><ArrowLeft className="size-4" />Portfolio</Link><b className="text-xs tracking-[.18em]">TENCENT VIDEO · INTERACTIVE ADS</b><span className="text-xs opacity-45">2026</span></header>
 
-    <section ref={hero} onPointerMove={moveHeroLight} onClick={enter} className="wall relative h-dvh snap-start [scroll-snap-stop:always] cursor-pointer overflow-hidden bg-[#999b99] pt-14">
-      <div className="concrete-base absolute inset-0 bg-[#999b99]" style={{ backgroundImage: 'radial-gradient(ellipse at 16% 12%,rgba(255,255,255,.13),transparent 30%),radial-gradient(ellipse at 82% 72%,rgba(55,59,58,.12),transparent 34%),linear-gradient(104deg,#a4a6a3 0%,#929592 48%,#a1a3a0 100%)' }} />
+    <section ref={hero} onPointerMove={moveHeroLight} className="wall relative mt-14 h-[calc(100dvh-3.5rem)] overflow-hidden bg-[#999b99]">
+      <img src="/images/projects/tencent-ad/bg_2.png" alt="" className="concrete-wall absolute inset-0 size-full object-cover" />
 
-      <div ref={wallpaper} className={`wallpaper-layer absolute inset-x-[clamp(.35rem,1vw,.85rem)] bottom-[clamp(.35rem,1vh,.7rem)] top-[calc(3.5rem+clamp(.35rem,1vh,.7rem))] z-10 overflow-hidden bg-[#c7a36d] shadow-[0_10px_28px_rgba(43,42,36,.3)] transition-[transform,opacity,filter] duration-[1100ms] ease-[cubic-bezier(.7,0,.2,1)] ${peeling ? 'translate-x-[108%] -translate-y-[7%] rotate-[3deg] opacity-0 drop-shadow-[-24px_28px_18px_rgba(0,0,0,.28)]' : ''}`} style={{ clipPath: 'polygon(.25% .4%,97.8% .15%,98.5% 1.1%,99.1% .45%,99.75% 2.2%,99.55% 96.8%,98.7% 99.15%,3.8% 99.65%,2.9% 98.7%,.45% 99.25%)' }}>
-        <img src="/images/projects/tencent-ad/bg_1.png" alt="" className="pointer-events-none absolute inset-0 size-full object-cover" />
+      <div ref={wallpaper} className={`wallpaper-layer absolute inset-0 z-10 overflow-hidden bg-transparent shadow-[0_10px_28px_rgba(43,42,36,.3)] ${peeling ? 'pointer-events-none' : ''}`}>
+        {[
+          'polygon(0 0,34% 0,31% 38%,38% 64%,30% 100%,0 100%)',
+          'polygon(31% 0,67% 0,63% 25%,70% 52%,61% 100%,30% 100%,38% 64%,31% 38%)',
+          'polygon(64% 0,100% 0,100% 100%,61% 100%,70% 52%,63% 25%)',
+        ].map((clipPath, index) => (
+          <div
+            key={clipPath}
+            className={`absolute inset-0 bg-[#c7a36d] transition-[transform,opacity,filter] duration-[1100ms] ease-[cubic-bezier(.7,0,.2,1)] ${peeling ? ['translate-x-[112%] -translate-y-[5%] rotate-[4deg]', 'translate-x-[120%] -translate-y-[10%] rotate-[7deg]', 'translate-x-[108%] -translate-y-[2%] rotate-[2deg]'][index] + ' opacity-0' : ''}`}
+            style={{ clipPath, backgroundImage: "url('/images/projects/tencent-ad/bg_1.png')", backgroundPosition: 'center', backgroundSize: 'cover' }}
+          />
+        ))}
         <div className="pointer-events-none absolute inset-0 z-[2] bg-[#302313]/30" />
         <div className="light-system pointer-events-none absolute inset-0 z-[3] overflow-hidden mix-blend-screen">
           <div className="beam absolute h-[clamp(270px,30vw,470px)] origin-left" style={{ left: 'var(--beam-source-x)', top: 'var(--beam-source-y)', width: 'var(--beam-length)', transform: 'translateY(-50%) rotate(var(--beam-angle))' }}>
@@ -129,7 +136,7 @@ export function TencentAdShowcase() {
         </div>
         <div className="pointer-events-none absolute inset-0 z-[4] shadow-[inset_0_0_120px_rgba(45,30,14,.32)]" />
 
-        <div className="hero-content relative z-10 mx-auto grid h-full w-full grid-rows-[42%_58%] px-[clamp(1.5rem,5vw,5rem)] py-[clamp(1rem,2.6vh,2rem)] text-[#302d28]">
+        <div className={`hero-content relative z-10 mx-auto grid h-full w-full grid-rows-[42%_58%] px-[clamp(1.5rem,5vw,5rem)] py-[clamp(1rem,2.6vh,2rem)] text-[#302d28] transition-opacity duration-300 ${peeling ? 'opacity-0' : 'opacity-100'}`}>
           <div className="relative min-h-0">
             <div className="absolute left-[1%] top-[18%] w-[clamp(9.5rem,14vw,13rem)] opacity-90">
               <p className="text-[clamp(1.08rem,1.55vw,1.45rem)] font-medium leading-[1.2]">看了，<br />但没在看</p>
@@ -150,28 +157,23 @@ export function TencentAdShowcase() {
           <div className="flex min-h-0 flex-col items-center justify-center pb-[clamp(.25rem,1vh,.75rem)] text-center">
             <h1 className="text-balance text-[clamp(2rem,3.25vw,3.2rem)] font-semibold leading-[1.08] tracking-[-.035em]">如果不能让用户看更多广告，<br />能不能让用户更愿意参与广告？</h1>
             <p className="mt-[clamp(.65rem,1.7vh,1rem)] text-[clamp(1rem,1.35vw,1.25rem)] text-[#95533d]">→ 从「被动看」到「主动玩」</p>
-            <button className="mt-[clamp(.85rem,2.1vh,1.35rem)] inline-flex items-center gap-2 border-b border-[#312e29]/70 pb-1.5 text-[11px] font-medium tracking-[.24em] transition-transform hover:translate-x-1">CLICK TO ENTER <ArrowRight className="size-3.5" /></button>
+            <button onClick={enter} className="mt-[clamp(.85rem,2.1vh,1.35rem)] inline-flex items-center gap-2 border-b border-[#312e29]/70 pb-1.5 text-[11px] font-medium tracking-[.24em] transition-transform hover:translate-x-1">CLICK TO ENTER <ArrowRight className="size-3.5" /></button>
             <p className="mt-[clamp(.35rem,1vh,.65rem)] text-[11px] italic tracking-wide text-[#575149]/55">What if ads were playable?</p>
           </div>
         </div>
       </div>
 
-      <div className={`lighting-layer pointer-events-none absolute inset-0 z-20 transition-opacity duration-500 ${entered ? 'opacity-20' : 'opacity-100'}`} />
+      <div className={`lighting-layer pointer-events-none absolute inset-0 z-20 transition-opacity duration-500 ${entered ? 'opacity-100' : 'opacity-0'}`} />
       <div className={`pointer-events-none absolute inset-y-0 left-0 z-30 w-full bg-gradient-to-r from-transparent via-[#fff8df]/65 to-transparent transition-transform duration-700 ${peeling ? 'translate-x-full' : '-translate-x-full'}`} />
-    </section>
-
-    <section ref={wall} className="relative h-dvh snap-start [scroll-snap-stop:always] overflow-hidden bg-[#aaa9a4] pt-14">
-      <div className="absolute inset-0 opacity-35" style={{ backgroundImage: 'radial-gradient(circle at 10% 20%,#fff 0 1px,transparent 2px),linear-gradient(115deg,transparent 45%,rgba(255,249,225,.48) 55%,transparent 72%)', backgroundSize: '18px 18px,100% 100%' }} />
-      <div className="absolute inset-y-0 left-0 w-[11%] bg-[#cbb46d] opacity-75" style={{ clipPath: 'polygon(0 0,100% 0,76% 15%,95% 31%,70% 48%,100% 66%,78% 84%,94% 100%,0 100%)' }} />
-      <div className="absolute -right-[12%] -top-[20%] h-[80%] w-[70%] rotate-[-18deg] bg-gradient-to-b from-[#fff6ce]/55 to-transparent blur-xl" />
-      <div className="absolute left-1/2 top-[48%] z-0 -translate-x-1/2 -translate-y-1/2 text-center"><p className="text-xs tracking-[.35em] opacity-35">TENCENT VIDEO</p><h2 className="mt-2 text-6xl font-semibold tracking-[-.05em] text-black/70">RETHINKING<br />ADS</h2><p className="mt-3 text-xs opacity-40">HOVER TO WATCH · CLICK TO EXPLORE</p></div>
-      {hovered && <Projection chapter={hovered} />}
-      <div className="relative z-20 mx-auto h-full max-w-[1400px] px-24">
-        {chapters.map((c,i) => { const positions=['left-[17%] top-[14%]','left-[8%] top-[43%]','right-[8%] top-[31%]','left-[19%] bottom-[12%]','right-[17%] bottom-[17%]','right-[35%] top-[11%]']; return <button key={c.id} onMouseEnter={() => setHovered(c)} onMouseLeave={() => setHovered(null)} onFocus={() => setHovered(c)} onBlur={() => setHovered(null)} onClick={() => setDetail(c)} className={`absolute text-left transition-all duration-500 ${positions[i]} ${hovered && hovered.id !== c.id ? 'opacity-20' : 'opacity-100'} ${hovered?.id===c.id?'scale-105 text-[#fff7d8] drop-shadow-[0_2px_8px_rgba(0,0,0,.5)]':''}`}><span className="text-xs tracking-[.2em] opacity-50">{c.id}</span><b className="mt-1 block text-xl tracking-[.05em]">{c.en}</b><span className="mt-1 block text-base">{c.cn}</span><small className="mt-2 block max-w-64 opacity-50">{c.caption}</small></button> })}
+      <div className={`project-menu-layer absolute inset-0 z-10 transition-opacity duration-500 ${entered ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
+        <div className="absolute -right-[12%] -top-[20%] h-[80%] w-[70%] rotate-[-18deg] bg-gradient-to-b from-[#fff6ce]/35 to-transparent blur-xl" />
+        <div className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 text-center opacity-35"><p className="text-xs tracking-[.35em]">TENCENT VIDEO</p><h2 className="mt-2 text-6xl font-semibold tracking-[-.05em]">RETHINKING<br />ADS</h2><p className="mt-3 text-xs">HOVER TO WATCH · CLICK TO EXPLORE</p></div>
+        {hovered && <Projection chapter={hovered} />}
+        <div className="relative mx-auto h-full max-w-[1400px] px-8 md:px-24">
+          {chapters.map((c, i) => { const positions = ['left-[17%] top-[14%]', 'left-[8%] top-[43%]', 'right-[8%] top-[31%]', 'left-[19%] bottom-[12%]', 'right-[17%] bottom-[17%]', 'right-[35%] top-[11%]']; return <button key={c.id} onMouseEnter={() => setHovered(c)} onMouseLeave={() => setHovered(null)} onFocus={() => setHovered(c)} onBlur={() => setHovered(null)} onClick={() => setDetail(c)} className={`absolute text-left transition-all duration-500 ${positions[i]} ${hovered && hovered.id !== c.id ? 'opacity-20' : 'opacity-100'} ${hovered?.id === c.id ? 'scale-105 text-[#fff7d8] drop-shadow-[0_2px_8px_rgba(0,0,0,.5)]' : ''}`}><span className="text-xs tracking-[.2em] opacity-50">{c.id}</span><b className="mt-1 block text-xl tracking-[.05em]">{c.en}</b><span className="mt-1 block text-base">{c.cn}</span><small className="mt-2 block max-w-64 opacity-50">{c.caption}</small></button> })}
+        </div>
       </div>
     </section>
-
-    <section className="relative grid h-dvh snap-start [scroll-snap-stop:always] place-items-center overflow-hidden bg-[#262725] px-8 pt-14 text-[#f5f0e5]"><div className="absolute inset-0 opacity-15 [background-image:radial-gradient(#fff_0.6px,transparent_0.6px)] [background-size:12px_12px]" /><div className="relative text-center"><p className="text-xs tracking-[.3em] text-[#d9bd6f]">AFTER</p><h2 className="mt-[clamp(1rem,3vh,2rem)] text-[clamp(3rem,5vw,4.5rem)] font-medium leading-[1.08]">From ads people skip<br /><span className="text-[#e6c86f]">to ads people choose to play.</span></h2><p className="mt-[clamp(1.5rem,4vh,2.5rem)] text-xs tracking-[.2em] opacity-45">Tencent Video · Interactive Advertising · Product / AI / Commercialization</p><Link href="/#projects" className="mt-[clamp(2rem,5vh,3.5rem)] inline-flex items-center gap-2 border-b border-white/40 pb-1 text-sm">BACK TO PROJECTS <ArrowRight className="size-4" /></Link></div></section>
 
     {detail && <div className="fixed inset-0 z-[80] grid place-items-center bg-black/70 p-6 backdrop-blur-sm" onClick={() => setDetail(null)}><article className="relative grid w-full max-w-5xl gap-6 rounded-2xl bg-[#e7e3da] p-7 shadow-2xl md:grid-cols-[1.15fr_.85fr]" onClick={e => e.stopPropagation()}><button onClick={() => setDetail(null)} aria-label="关闭详情" className="absolute right-4 top-4 z-10 grid size-9 place-items-center rounded-full bg-white"><X className="size-4" /></button><div className="aspect-video overflow-hidden rounded-xl bg-[#272825]"><img src={detail.image} alt={`${detail.en} 项目预览`} className="size-full object-cover opacity-80 mix-blend-screen" /></div><div className="pr-5"><p className="text-xs tracking-[.2em] opacity-45">{detail.id} · {detail.en}</p><h3 className="mt-2 text-3xl font-semibold">{detail.cn}</h3><p className="mt-2 text-sm text-[#73513e]">{detail.caption}</p>{[['WHY',detail.why],['HOW',detail.how],['RESULT',detail.result]].map(x => <div key={x[0]} className="mt-5 border-t border-black/10 pt-3"><b className="text-[10px] tracking-[.2em] opacity-45">{x[0]}</b><p className="mt-1 leading-7">{x[1]}</p></div>)}</div></article></div>}
   </main>

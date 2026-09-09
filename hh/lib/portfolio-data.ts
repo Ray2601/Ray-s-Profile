@@ -97,7 +97,7 @@ export const projects: Project[] = [
     accent: 'primary',
     displayType: 'featured',
     href: '/projects/25-degree',
-    tryHref: '#小程序://25度/XncAVyMKSv6bpvy',
+    tryHref: 'https://s.c1ns.cn/kyo4a',
   },
   {
     id: 'resume-agent',
@@ -108,12 +108,12 @@ export const projects: Project[] = [
     image: '/images/projects/resume-agent/cover.png',
     tags: ['Agent 搭建', 'Prompt 工程', 'Badcase 迭代', '用户调研'],
     metrics: [
-      { value: '90%+', label: '有效建议率(占位)' },
-      { value: '3x', label: '迭代提效(占位)' },
+      { value: '+200%', label: '优化后简历面试收到率较原始简历提升' },
+      { value: '80%→3%', label: '实现幻觉率' },
     ],
     accent: 'primary',
     displayType: 'featured',
-    modalOnly: true,
+    href: '/projects/resume-agent',
     tryHref: 'https://resume-agent-phi.vercel.app/',
   },
   {
@@ -137,8 +137,7 @@ export const projects: Project[] = [
     id: 'xiniuniao',
     title: 'Interactive-edit-3D',
     subtitle: '腾讯犀牛鸟 · AI × 3D',
-    description:
-      '把一张普通图片变成可交互的 3D 模型。完成从交互式抠像、图像补全到 3D 生成的一体化流程。',
+    description: '把一张普通图片变成可交互的 3D 模型。完成从交互式抠像、图像补全到 3D 生成的一体化流程。',
     image: '/images/projects/interactive-3d/cover.png',
     tags: ['SAM 分割', 'Qwen 补全', 'Hunyuan3D', '模型评测'],
     metrics: [
@@ -152,15 +151,16 @@ export const projects: Project[] = [
   },
   {
     id: 'zhijing',
-    title: '智鲸助手',
+    title: '智鲸助手项目',
     subtitle: 'AI Agent · 从场景定义到数据验证',
-    description:
-      '围绕真实业务场景搭建的智能助手，覆盖需求拆解、工具调用与效果验证，用数据驱动持续优化。',
+    description: '将企业任务拆解为 4 类 Skill，通过 8 套 Prompt 与 6 轮 Badcase 迭代，构建任务解析—资源检索—商机匹配 Agent。',
     image: '/images/projects/zhijing/cover.png',
     tags: ['场景定义', '工具调用', '数据验证', 'A/B 测试'],
     metrics: [
-      { value: '2k+', label: '日均调用(占位)' },
-      { value: '4.6', label: '用户满意度(占位)' },
+      { value: '80% ↑', label: '任务创建' },
+      { value: '70% ↓', label: '检索耗时' },
+      { value: '3×', label: '商机匹配' },
+      { value: '60→85%', label: '提取准确率' },
     ],
     accent: 'accent',
     displayType: 'side',

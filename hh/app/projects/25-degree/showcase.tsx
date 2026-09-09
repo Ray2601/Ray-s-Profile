@@ -7,16 +7,16 @@ import { ArrowLeft, ArrowRight, X } from 'lucide-react'
 
 const names = ['THE RESULT', 'THE GAP', 'THE MVP', 'THE PRODUCT', 'THE SYSTEM', 'WHAT SURVIVED']
 const archive = [
+  ['发菜单', '/images/projects/25/02-mvp/manual-menu-note.png'],
   ['群公告', '/images/projects/25/02-mvp/wechat-group-announcement.jpg'],
-  ['菜单笔记', '/images/projects/25/02-mvp/manual-menu-note.png'],
+  ['群运营', '/images/projects/25/02-mvp/wechat-group-operation.png'],
   ['群接龙', '/images/projects/25/02-mvp/wechat-order-relay.png'],
-  ['配送排班', '/images/projects/25/02-mvp/wechat-group-operation.png'],
 ] as const
 const orderNotes = [
-  { title: '发菜单', code: 'MENU RELEASE', note: '群公告 = 首页，微信笔记 = SKU CMS v0。' },
-  { title: '群接龙', code: 'ORDER SYSTEM v0', note: '没有购物车，接龙就是我们的 Order System v0。' },
-  { title: '微信转账', code: 'PAYMENT v0', note: '没有支付系统，微信转账就是 Payment v0。' },
-  { title: '人工派单', code: 'DISPATCH ENGINE v0', note: '没有调度算法，一张配送班次表就是 Dispatch Engine v0。' },
+  { title: '发菜单', code: 'MENU RELEASE', note: '微信笔记 = SKU CMS v0，把当天可售商品集中发给用户。' },
+  { title: '群公告', code: 'TRAFFIC ENTRY', note: '群公告 = 首页，让新用户第一眼就能找到下单入口。' },
+  { title: '群运营', code: 'GROUP OPS', note: '在群里答疑、催单和协调异常，人工维持交易秩序。' },
+  { title: '群接龙', code: 'ORDER SYSTEM v0', note: '没有购物车，群接龙就是我们的 Order System v0。' },
 ] as const
 
 function Frame({ n, act, title, tone = 'cream', children }: { n: number; act: string; title?: React.ReactNode; tone?: 'cream' | 'yellow' | 'blue'; children: React.ReactNode }) {
@@ -63,7 +63,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 
 function Phone({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-[280px] shrink-0 md:w-[330px]">
+    <div className="w-[200px] shrink-0 md:w-[230px]">
       <div className="overflow-hidden rounded-[2rem] border-[6px] border-[#292622] bg-white shadow-2xl">
         <div className="relative flex h-7 items-center justify-center bg-[#292622] text-[9px] font-medium text-white/90">
           <span className="absolute left-4">11:37</span>
@@ -384,7 +384,7 @@ function InteractiveProductDemo() {
   </div>
 }
 
-function ProductStageV3() {
+function ProductStageV3Legacy() {
   const [active, setActive] = useState<InteractiveSideId>('user')
   const [screen, setScreen] = useState<Record<InteractiveSideId, number>>({ user: 0, merchant: 0, rider: 0 })
   const [drag, setDrag] = useState(0)
@@ -438,6 +438,75 @@ function ProductStageV3() {
   </div>
 }
 
+function ProductStageV3() {
+  const productPhones = {
+    user: {
+      label: '用户端',
+      screens: ['01-user-home.png', '02-user-food-street.png', '03-user-search.png', '04-user-store-detail.png', '05-user-confirm-order.png', '06-user-delivery-progress.png', '07-user-orders.png', '08-user-profile.png'],
+    },
+    merchant: {
+      label: '商家端',
+      screens: ['09-merchant-dashboard.png', '10-merchant-new-order.png', '11-merchant-fulfillment.png'],
+    },
+    rider: {
+      label: '骑手端',
+      screens: ['12-rider-dashboard.png', '13-rider-route.png', '14-rider-last-100m.png'],
+    },
+  } as const
+  const [active, setActive] = useState<keyof typeof productPhones>('user')
+  const [screen, setScreen] = useState({ user: 0, merchant: 0, rider: 0 })
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setScreen(current => ({
+        ...current,
+        [active]: (current[active] + 1) % productPhones[active].screens.length,
+      }))
+    }, 2200)
+    return () => window.clearInterval(interval)
+  }, [active])
+
+  const positionOrder: Record<keyof typeof productPhones, (keyof typeof productPhones)[]> = {
+    user: ['merchant', 'user', 'rider'],
+    merchant: ['user', 'merchant', 'rider'],
+    rider: ['user', 'rider', 'merchant'],
+  }
+  const order = positionOrder[active]
+
+  return <div className="mt-1 flex h-[calc(100%_-_7rem)] min-h-0 flex-col">
+    <p className="text-[17px] leading-6 text-[#6b635a]">于是，我把人工交易链拆成了用户、商家、骑手三个产品端。</p>
+    <div className="relative mt-1 min-h-0 flex-1">
+      {(Object.keys(productPhones) as (keyof typeof productPhones)[]).map(id => {
+        const item = productPhones[id]
+        const isActive = id === active
+        const position = order.indexOf(id)
+        const file = item.screens[screen[id]]
+        return <button
+          key={id}
+          type="button"
+          onClick={() => isActive
+            ? setScreen(current => ({ ...current, [id]: (current[id] + 1) % item.screens.length }))
+            : setActive(id)}
+          aria-label={`切换到${item.label}`}
+          className={`absolute top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center transition-all duration-700 ${isActive ? 'z-20 -mt-[60px] w-[clamp(166px,15.36vw,243px)] opacity-100' : 'z-10 mt-0 w-[clamp(115px,10vw,165px)] opacity-70 md:-mt-[32px] hover:opacity-100'}`}
+          style={{ left: position === 0 ? '16.5%' : position === 1 ? '50%' : '83.5%' }}
+        >
+          <img
+            src={`/images/projects/25/prototypes/ui/${file}`}
+            alt={`${item.label} ${String(screen[id] + 1).padStart(2, '0')}`}
+            className="block h-auto w-full object-contain drop-shadow-[0_20px_22px_rgba(41,38,34,.18)]"
+          />
+          <p className={`mt-3 font-semibold transition-all ${isActive ? 'text-xl text-[#d86135]' : 'text-sm text-[#6b635a]'}`}>{item.label}</p>
+          {isActive && <p className="mt-1 text-[10px] tracking-[.14em] text-black/40">{String(screen[id] + 1).padStart(2, '0')} / {String(item.screens.length).padStart(2, '0')} · AUTO</p>}
+        </button>
+      })}
+    </div>
+    <div className="mx-auto flex w-full max-w-3xl items-center justify-center gap-4 border-t border-black/10 pt-3 text-sm text-[#6b635a]">
+      <span>用户下单</span><ArrowRight className="size-4 text-[#d86135]" /><span>商家制作</span><ArrowRight className="size-4 text-[#d86135]" /><span>骑手配送</span>
+    </div>
+  </div>
+}
+
 export function DegreeShowcase() {
   const router = useRouter()
   const ref = useRef<HTMLDivElement>(null)
@@ -460,7 +529,7 @@ export function DegreeShowcase() {
     setTimeout(() => setFarewellLeaving(true), 700)
     setTimeout(() => router.push('/#projects'), 1250)
   }
-  useEffect(() => { if (timer.current) clearTimeout(timer.current); if (!modal && scene < 5) timer.current = setTimeout(() => go(scene + 1), 8000); return () => { if (timer.current) clearTimeout(timer.current) } }, [scene, modal])
+  useEffect(() => { if (timer.current) clearTimeout(timer.current); if (!modal && scene < 5 && scene !== 3) timer.current = setTimeout(() => go(scene + 1), 8000); return () => { if (timer.current) clearTimeout(timer.current) } }, [scene, modal])
   useEffect(() => { const el = ref.current; if (!el) return; const wheel = (e: WheelEvent) => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { e.preventDefault(); el.scrollLeft += e.deltaY } }; const scroll = () => { const p = el.scrollLeft / Math.max(1, el.scrollWidth - el.clientWidth); setScene(Math.round(p * 5)) }; el.addEventListener('wheel', wheel, { passive: false }); el.addEventListener('scroll', scroll); return () => { el.removeEventListener('wheel', wheel); el.removeEventListener('scroll', scroll) } }, [])
   return <main onClickCapture={leaveCaseStudy} className="h-dvh overflow-hidden bg-[#f7f1e7] text-[#292622]">
     {farewell && <div className={`fixed inset-0 z-[80] grid place-items-center bg-[#f7f1e7]/90 backdrop-blur-sm transition-all duration-500 ${farewellLeaving ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}><div className="text-center"><div className="mx-auto grid size-24 animate-bounce place-items-center rounded-[28px] bg-[#f3c64f] text-5xl shadow-xl">🛍️</div><p className="mt-6 text-3xl font-semibold tracking-tight text-[#d86135]">感谢您的陪伴</p><p className="mt-2 text-sm tracking-[.16em] opacity-55">YOUR 25° DELIVERY HAS ARRIVED</p></div></div>}
@@ -490,7 +559,7 @@ export function DegreeShowcase() {
       </Frame>
 
       <Frame n={3} act="ACT 02 · THE VERY FIRST MVP" tone="yellow" title={<>我们先假装做了一场<br /><span className="text-[#d86135]">“社会学实验”。</span></>}>
-        <div className="mt-3 flex items-center justify-between rounded-xl bg-white/45 px-5 py-2.5 text-sm font-medium">{['250 PEOPLE', '发菜单', '群接龙', '微信转账', '人工派单'].map((x, i) => <div key={x} className="contents"><span className={i < photo + 1 ? 'text-[#267052]' : i === photo + 1 ? 'text-[#d86135]' : 'opacity-35'}>{i < photo + 1 ? '✓' : i === photo + 1 ? '●' : '○'} {x}</span>{i < 4 && <ArrowRight className="size-4 opacity-25" />}</div>)}</div>
+        <div className="mt-3 flex items-center justify-between rounded-xl bg-white/45 px-5 py-2.5 text-sm font-medium">{['250 PEOPLE', '发菜单', '群公告', '群运营', '群接龙'].map((x, i) => <div key={x} className="contents"><span className={i < photo + 1 ? 'text-[#267052]' : i === photo + 1 ? 'text-[#d86135]' : 'opacity-35'}>{i < photo + 1 ? '✓' : i === photo + 1 ? '●' : '○'} {x}</span>{i < 4 && <ArrowRight className="size-4 opacity-25" />}</div>)}</div>
         <div className="mt-4 grid items-center gap-10 md:grid-cols-2">
           <div className="mx-auto flex items-center justify-center gap-4">
             <figure className="relative w-fit max-w-full -rotate-1 bg-[#fffdf7] p-1.5 shadow-lg"><span className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 -rotate-2 whitespace-nowrap bg-[#f2a900] px-5 py-2 text-sm font-semibold tracking-[.08em] shadow-sm">FIELD NOTE · 00</span><img src="/images/projects/25/02-mvp/posrter-campus.png" alt="校园小吃街招募海报" className="block h-[50dvh] w-auto max-w-full object-contain" /></figure>

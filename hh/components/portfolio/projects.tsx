@@ -198,11 +198,13 @@ function ProjectCard({
             {project.href && !project.modalOnly ? (
               <Link href={project.href} className="inline-flex items-center gap-1.5 transition-colors hover:text-primary">
                 {project.title}
+                {project.displayType !== 'side' && <span className="text-[.5em] font-normal tracking-normal text-muted-foreground">（详情页）</span>}
                 <ArrowUpRight className="size-6 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </Link>
             ) : (
               <button type="button" onClick={() => onOpen(project)} className="inline-flex items-center gap-1.5 text-left transition-colors hover:text-primary">
                 {project.title}
+                {project.displayType !== 'side' && <span className="text-[.5em] font-normal tracking-normal text-muted-foreground">（详情页）</span>}
                 <ArrowUpRight className="size-6 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </button>
             )}
@@ -213,13 +215,22 @@ function ProjectCard({
                 rel="noreferrer"
                 className="ml-2 inline-flex items-center gap-1 rounded-full bg-[#292622] px-3 py-1.5 align-middle text-xs font-medium text-white transition-colors hover:bg-[#c86f60]"
               >
-                点击试试 <ArrowUpRight className="size-3.5" />
+                {project.id === '25-degree' ? '点击试试（Demo） 选择【香港科技大学（广州）】' : '点击试试 Demo'} <ArrowUpRight className="size-3.5" />
               </a>
             )}
           </h3>
           <p className="line-clamp-2 max-w-prose text-[13px] leading-[1.55] text-muted-foreground">
             {project.description}
           </p>
+
+          {compact && <div className="mt-1 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {project.metrics.map((metric) => (
+              <div key={metric.label} className="rounded-xl bg-[#fffaf2] px-3 py-2">
+                <p className="text-base font-medium leading-tight text-[#c86f60]">{metric.value}</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">{metric.label}</p>
+              </div>
+            ))}
+          </div>}
 
           {!compact && <div className="mt-1 flex flex-wrap gap-1.5">
             {project.tags.slice(0, 4).map((tag) => (
