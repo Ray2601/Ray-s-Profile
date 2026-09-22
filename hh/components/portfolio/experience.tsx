@@ -28,7 +28,7 @@ const items: Item[] = [
   { org: 'Respulse Medical Technology Limited', role: '产品经理 & 项目经理', meta: 'AI 硬件', period: '2024.07 — 2025.03', tags: ['AI HARDWARE', '0→1', 'HEALTHCARE'], achievements: [
     { title: '用户调研与定义', body: '访谈北京东直门医院患者与医生，对标海外设备，定义远程居家诊断与呼吸贴。', metric: '10+ 深度访谈 · 2 款竞品' },
     { title: '团队与项目管理', body: '完成核心团队组建，覆盖硬件、算法与临床验证，推动 MVP 迭代。', metric: '20+ 候选人 · 3 人团队 · 4 个月 MVP' },
-    { title: '产品结果', body: '推动产品实现五种慢性呼吸疾病识别。（慢阻肺、哮喘、睡眠呼吸暂停、急性下呼吸道感染、肺癌）', metric: 'Precision 90%+ · F1 Score 85%+' },
+    { title: '产品结果', body: '推动产品实现五种慢性呼吸疾病识别。（慢阻肺、哮喘、睡眠呼吸暂停、中央气道狭窄、肺癌）', metric: 'Precision 90%+ · F1 Score 85%+' },
     { title: '融资推进', body: '参与多轮路演，推动政府意向投资与种子轮融资。', metric: '¥200 万意向 · ¥10 万种子轮' },
   ]},
 ]
