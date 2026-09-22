@@ -236,6 +236,11 @@ const stagedPains = [
   { text: '有曝光数字，没有用户态度', group: 2, scatter: 'left-[58%] top-[21%]', grouped: 'right-[8%] top-[46%]' },
 ] as const
 
+const floatingPainSeeds = [
+  [7, 17], [27, 11], [16, 68], [39, 8], [68, 26], [32, 64],
+  [46, 47], [74, 76], [82, 12], [78, 43], [64, 66], [58, 21],
+] as const
+
 export function TencentAdShowcase() {
   const scroller = useRef<HTMLElement>(null)
   const wall = useRef<HTMLDivElement>(null)
@@ -243,6 +248,7 @@ export function TencentAdShowcase() {
   const lightCurrent = useRef({ x: 0, y: 0 })
   const lightReady = useRef(false)
   const revealTimers = useRef<number[]>([])
+  const [floatingPains, setFloatingPains] = useState<Array<{ x: number; y: number }>>([])
   const [phase, setPhase] = useState(0)
   const [transitioning, setTransitioning] = useState(false)
   const [hovered, setHovered] = useState<Chapter | null>(null)
@@ -289,6 +295,55 @@ export function TencentAdShowcase() {
     frame = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(frame)
   }, [])
+
+  useEffect(() => {
+    if (phase !== 0) return
+    const layer = wall.current
+    if (!layer) return
+
+    const bounds = layer.getBoundingClientRect()
+    const padding = 28
+    const estimatedWidths = [160, 210, 170, 210, 215, 320, 230, 240, 150, 220, 265, 230]
+    const positions = floatingPainSeeds.map(([x, y], index) => ({
+      x: Math.min(bounds.width - estimatedWidths[index] - padding, Math.max(padding, bounds.width * x / 100)),
+      y: Math.min(bounds.height - 42 - padding, Math.max(padding, bounds.height * y / 100)),
+    }))
+    const velocities = floatingPainSeeds.map((_, index) => ({
+      x: (index % 2 === 0 ? 1 : -1) * (16 + (index * 7) % 14),
+      y: (index % 3 === 0 ? -1 : 1) * (11 + (index * 5) % 12),
+    }))
+    let frame = 0
+    let previous = performance.now()
+    let lastPaint = 0
+
+    setFloatingPains(positions)
+    const float = (now: number) => {
+      const delta = Math.min((now - previous) / 1000, .05)
+      previous = now
+      positions.forEach((position, index) => {
+        const velocity = velocities[index]
+        position.x += velocity.x * delta
+        position.y += velocity.y * delta
+        const maxX = Math.max(padding, bounds.width - estimatedWidths[index] - padding)
+        const maxY = Math.max(padding, bounds.height - 42 - padding)
+        if (position.x <= padding || position.x >= maxX) {
+          position.x = Math.min(maxX, Math.max(padding, position.x))
+          velocity.x *= -1
+        }
+        if (position.y <= padding || position.y >= maxY) {
+          position.y = Math.min(maxY, Math.max(padding, position.y))
+          velocity.y *= -1
+        }
+      })
+      if (now - lastPaint > 32) {
+        lastPaint = now
+        setFloatingPains(positions.map(position => ({ ...position })))
+      }
+      frame = requestAnimationFrame(float)
+    }
+    frame = requestAnimationFrame(float)
+    return () => cancelAnimationFrame(frame)
+  }, [phase])
 
   useEffect(() => () => revealTimers.current.forEach(window.clearTimeout), [])
 
@@ -347,7 +402,7 @@ export function TencentAdShowcase() {
 
         <div className={`absolute inset-0 z-20 transition-opacity duration-700 ${phase >= 2 ? 'opacity-0' : 'opacity-100'}`}>
           {painGroups.map(group => <p key={group.id} className={`absolute text-[10px] font-semibold tracking-[.28em] text-[#d8b88b] transition-all duration-700 ${phase >= 1 ? 'opacity-100' : 'opacity-0'} ${group.id === 'USER' ? 'left-[8%] top-[17%]' : group.id === 'PLATFORM' ? 'left-[38%] top-[22%]' : 'right-[8%] top-[18%]'}`}>{group.id}</p>)}
-          {stagedPains.map((pain, index) => <p key={pain.text} className={`absolute max-w-[30vw] text-[clamp(.82rem,1.1vw,1.05rem)] leading-relaxed text-[#f2eee4] transition-all duration-[900ms] ease-out ${phase >= 1 ? pain.grouped : pain.scatter} ${phase >= painFadePhases[pain.group][index - (pain.group === 0 ? 0 : pain.group === 1 ? 3 : 8)] ? 'scale-95 opacity-0' : 'opacity-100'}`}>{pain.text}</p>)}
+          {stagedPains.map((pain, index) => <p key={pain.text} style={phase === 0 && floatingPains[index] ? { left: `${floatingPains[index].x}px`, top: `${floatingPains[index].y}px` } : undefined} className={`absolute max-w-[30vw] text-[clamp(.82rem,1.1vw,1.05rem)] leading-relaxed text-[#f2eee4] ${phase === 0 ? 'transition-none' : 'transition-all duration-[900ms] ease-out'} ${phase >= 1 ? pain.grouped : pain.scatter} ${phase >= painFadePhases[pain.group][index - (pain.group === 0 ? 0 : pain.group === 1 ? 3 : 8)] ? 'scale-95 opacity-0' : 'opacity-100'}`}>{pain.text}</p>)}
         </div>
 
         <div className={`pointer-events-none absolute inset-0 z-[21] transition-opacity duration-700 ${phase === 1 ? 'opacity-100' : 'opacity-0'}`}>

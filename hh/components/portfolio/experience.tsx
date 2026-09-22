@@ -15,8 +15,8 @@ const items: Item[] = [
   ]},
   { org: '清华大学智能产业研究院 AIR', role: '算法实习生', period: '2025.09 — 2025.12', tags: ['3D VISION', 'DATASET', 'EVALUATION'], achievements: [
     { title: '项目方向', body: '从 RGB-D 图像重建手部与物体三维模型，定位手物合成穿模问题。' },
-    { title: '评测数据集', body: '完成去畸变、时间轴对齐、21 个手部关键点、6D 位姿同步与坐标映射。', metric: '20 组标准数据 · 4 训练 / 16 测试' },
-    { title: 'SOTA 模型评测', body: '以 ADD-S/AUC 统一评测 Amodal3R、HOT3D 与 TRELLIS，交付 6D 位姿和 GLB。' },
+    { title: '评测数据集', body: '完成去畸变、时间轴对齐、21 个手部关键点、6D 位姿同步与坐标映射。', metric: '20 组标准数据 · 16 训练 / 4 测试' },
+    { title: 'SOTA 模型评测', body: '以 ADD-S/AUC 统一评测 Amodal3R 与 TRELLIS，交付 6D 位姿和 GLB。' },
     { title: '关键发现', body: '验证手物重叠场景存在系统性泛化缺陷，支撑后续论文方向。', metric: 'ADD-S/AUC 0.85+ → 0.52' },
   ]},
   { org: '北京多度智造科技有限公司', role: '产品运营', meta: '25° 外卖配送平台', period: '2025.03 — 2025.06', tags: ['0→1', 'GROWTH', 'OPERATIONS'], achievements: [
@@ -28,7 +28,7 @@ const items: Item[] = [
   { org: 'Respulse Medical Technology Limited', role: '产品经理 & 项目经理', meta: 'AI 硬件', period: '2024.07 — 2025.03', tags: ['AI HARDWARE', '0→1', 'HEALTHCARE'], achievements: [
     { title: '用户调研与定义', body: '访谈北京东直门医院患者与医生，对标海外设备，定义远程居家诊断与呼吸贴。', metric: '10+ 深度访谈 · 2 款竞品' },
     { title: '团队与项目管理', body: '完成核心团队组建，覆盖硬件、算法与临床验证，推动 MVP 迭代。', metric: '20+ 候选人 · 3 人团队 · 4 个月 MVP' },
-    { title: '产品结果', body: '推动产品实现五种慢性呼吸疾病识别。', metric: 'Precision 90%+ · F1 Score 85%+' },
+    { title: '产品结果', body: '推动产品实现五种慢性呼吸疾病识别。（慢阻肺、哮喘、睡眠呼吸暂停、急性下呼吸道感染、肺癌）', metric: 'Precision 90%+ · F1 Score 85%+' },
     { title: '融资推进', body: '参与多轮路演，推动政府意向投资与种子轮融资。', metric: '¥200 万意向 · ¥10 万种子轮' },
   ]},
 ]
